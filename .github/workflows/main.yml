@@ -1,0 +1,29 @@
+name: Deploy
+
+on:  
+  workflow_dispatch:
+  schedule:
+  - cron: '0 0 * * *'  #every day at 6:00 am EST
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3.1.0
+      - name: Set up Python
+        uses: actions/setup-python@v4.3.0
+        with:
+          python-version: '3.x'
+          cache: 'pip'
+      - name: Wait for Test
+        uses: fountainhead/action-wait-for-check@v1.1.0
+        with:
+          checkName: test
+          token: ${{ github.token }}
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+      - name: Run Script
+        run: timeout 1800 python MicrosoftRewardsBot.py --accounts ${{ secrets.ACCOUNTS }} --headless --fast --privacy
+      - name: Retry
+        if: ${{ failure() }}
+        run: timeout 1800 python MicrosoftRewardsBot.py --accounts ${{ secrets.ACCOUNTS }} --headless --fast --privacy
