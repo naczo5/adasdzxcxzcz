@@ -3,7 +3,7 @@ name: Deploy
 on:  
   workflow_dispatch:
   schedule:
-  - cron: '0 11 * * *'
+  - cron: '0 0 * * *'  #every day at 6:00 am EST
 
 jobs:
   deploy:
@@ -23,4 +23,7 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
       - name: Run Script
-        run: python MicrosoftRewardsBot.py --accounts ${{ secrets.ACCOUNTS }} --headless --privacy
+        run: timeout 1800 python MicrosoftRewardsBot.py --accounts ${{ secrets.ACCOUNTS }} --headless --privacy
+      - name: Retry
+        if: ${{ failure() }}
+        run: timeout 1800 python MicrosoftRewardsBot.py --accounts ${{ secrets.ACCOUNTS }} --headless --privacy
