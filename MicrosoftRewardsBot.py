@@ -9,6 +9,7 @@ import urllib.parse
 from pathlib import Path
 from argparse import ArgumentParser
 from datetime import date, datetime, timedelta
+from discord_webhook import DiscordWebhook
 
 import ipapi
 import requests
@@ -1067,6 +1068,18 @@ def argumentParser():
                         help='[Optional] Enable privacy mode.',
                         action='store_true',
                         required=False)
+    parser.add_argument('--d',
+                         metavar=('<API_TOKEN>'),
+                         nargs=1,
+                         help='[Optional] Discord webhooks', 
+                         type=str, 
+                         required=False)
+    parser.add_argument('--wfd',
+                         metavar=('<WF_NAME>, <WF_RN>'),
+                         nargs=2,
+                         help='[Optional] Workflow name and run number', 
+                         type=str, 
+                         required=False)
     args = parser.parse_args()
     if args.everyday:
         if isinstance(validateTime(args.everyday), str):
@@ -1078,7 +1091,7 @@ def argumentParser():
         FAST = True
     if len(sys.argv) > 1:
         for arg in vars(args):
-            if "accounts" in arg or "proxies" in arg:
+            if "accounts" in arg or "proxies" in arg or "d" in arg:
                 if args.privacy:
                     continue
             prBlue(f"[INFO] {arg} : {getattr(args, arg)}")
@@ -1158,6 +1171,37 @@ def checkInternetConnection():
         except (subprocess.CalledProcessError, subprocess.TimeoutExpired):
             prRed("[ERROR] No internet connection.")
             time.sleep(1)
+
+def createMessge():
+     today = date.today().strftime("%d/%m/%Y")
+     message = f'📅 Daily report {today} (N: {ARGS.wfd[0]}, RN: {ARGS.wfd[1]})\n\n'
+     for index, value in enumerate(LOGS.items(), 1):
+         if value[1]['Last check'] == str(date.today()):
+             status = '✅ Farmed'
+             new_points = value[1]["Today's points"]
+             total_points = value[1]["Points"]
+             message += f"{index}. {value[0]}\n📝 Status: {status}\n⭐ Today's points: {new_points}\n🏅 Total points: {total_points}\n\n"        
+         elif value[1]['Last check'] == 'Your account has been suspended':
+             status = '❌ Suspended'
+             message += f"{index}. {value[0]}\n📝 Status: {status}\n"        
+         elif value[1]['Last check'] == 'Your account has been locked !':
+             status = '⚠️ Locked'
+             message += f"{index}. {value[0]}\n📝 Status: {status}\n"        
+         elif value[1]['Last check'] == 'Unusual activity detected !':
+             status = '⚠️ Unusual activity detected'
+             message += f"{index}. {value[0]}\n📝 Status: {status}\n"        
+         elif value[1]['Last check'] == 'Unknown error !':
+             status = '⛔️ Unknow error occured'
+             message += f"{index}. {value[0]}\n📝 Status: {status}\n"        
+         else:
+             status = '⛔️ Unknow error occured'
+             message += f"{index}. {value[0]}\n📝 Status: {status}\n"        
+     return message
+
+def dwh(message):
+    webhook = DiscordWebhook(url=ARGS.d[0], rate_limit_retry=True, content=message)
+    response = webhook.execute()
+
 
 def prRed(prt):
     print(f"\033[91m{prt}\033[00m")
@@ -1274,6 +1318,9 @@ def farmer():
         checkInternetConnection()
         farmer()
     else:
+        if ARGS.d:
+            message = createMessge()
+            dwh(message)
         FINISHED_ACCOUNTS.clear()
 
 def main():
