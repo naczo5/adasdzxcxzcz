@@ -3,7 +3,7 @@ name: Deploy-4
 on:  
   workflow_dispatch:
   schedule:
-  - cron: '0 11 * * *'
+  - cron: '4 11 * * *'
 
 jobs:
   deploy:
@@ -23,4 +23,4 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
       - name: Run Script
-        run: python MicrosoftRewardsBot.py --accounts ${{ secrets.keys4 }} --headless --privacy
+        run: python MicrosoftRewardsBot.py --accounts ${{ secrets.keys4 }} --headless --d ${{ secrets.webhook }} --privacy --wfd ${{ github.workflow }} ${{ github.run_number }}

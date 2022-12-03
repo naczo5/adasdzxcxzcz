@@ -1,0 +1,11 @@
+name: test3
+
+on:
+  workflow_dispatch
+
+jobs:
+  test3:
+    runs-on: ubuntu-latest
+    steps:
+      - name: "test3"
+        run: echo "$GITHUB_WORKFLOW $GITHUB_RUN_NUMBER"
