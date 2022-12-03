@@ -10,3 +10,4 @@ random-word==1.0.7
 pyyaml
 webdriver-manager
 packaging
+discord-webhook
