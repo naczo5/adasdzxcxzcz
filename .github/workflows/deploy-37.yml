@@ -22,4 +22,4 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
       - name: Run Script
-        run: python MicrosoftRewardsBot.py --accounts ${{ secrets.keys37 }} --headless --d ${{ secrets.webhook }} --privacy --wfd ${{ github.workflow }} ${{ github.run_number }}
+        run: python stara.py --accounts ${{ secrets.keys37 }} --headless --d ${{ secrets.webhook }} --privacy --wfd ${{ github.workflow }} ${{ github.run_number }}

@@ -23,7 +23,7 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
       - name: Run Script
-        run: timeout 1800 python MicrosoftRewardsBot.py --accounts ${{ secrets.ACCOUNTS }} --headless --fast --privacy
+        run: timeout 1800 python  stara.py --accounts ${{ secrets.ACCOUNTS }} --headless --fast --privacy
       - name: Retry
         if: ${{ failure() }}
-        run: timeout 1800 python MicrosoftRewardsBot.py --accounts ${{ secrets.ACCOUNTS }} --headless --fast --privacy
+        run: timeout 1800 python  stara.py --accounts ${{ secrets.ACCOUNTS }} --headless --fast --privacy
