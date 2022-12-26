@@ -3,7 +3,7 @@ name: Deploy-28
 on:  
   workflow_dispatch:
   schedule:
-  - cron: '8 15 * * *'
+  - cron: '36 15 * * *'
 
 jobs:
   deploy:
