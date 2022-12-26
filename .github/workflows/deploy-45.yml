@@ -3,7 +3,7 @@ name: Deploy-45
 on:  
   workflow_dispatch:
   schedule:
-  - cron: '5 19 * * *'
+  - cron: '21 19 * * *'
 jobs:
   deploy:
     runs-on: ubuntu-latest
