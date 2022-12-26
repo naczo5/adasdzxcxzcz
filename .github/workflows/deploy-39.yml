@@ -3,7 +3,7 @@ name: Deploy-39
 on:  
   workflow_dispatch:
   schedule:
-  - cron: '9 17 * * *'
+  - cron: '41 17 * * *'
 jobs:
   deploy:
     runs-on: ubuntu-latest
