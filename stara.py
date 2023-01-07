@@ -194,7 +194,7 @@ def login(browser: WebDriver, email: str, pwd: str, isMobile: bool = False):
 
 def RewardsLogin(browser: WebDriver):
     #Login into Rewards
-    browser.get('https://rewards.microsoft.com/dashboard')
+    browser.get('https://rewards.bing.com/dashboard')
     try:
         time.sleep(10 if not FAST else 5)
         browser.find_element(By.ID, 'raf-signin-link-id').click()
@@ -431,9 +431,9 @@ def resetTabs(browser: WebDriver):
 
         browser.switch_to.window(curr)
         time.sleep(0.5)
-        browser.get('https://rewards.microsoft.com/')
+        browser.get('https://rewards.bing.com/')
     except:
-        browser.get('https://rewards.microsoft.com/')
+        browser.get('https://rewards.bing.com/')
 
 def getAnswerCode(key: str, string: str) -> str:
 	t = 0
@@ -823,8 +823,8 @@ def completePunchCards(browser: WebDriver):
             if punchCard['parentPromotion'] != None and punchCard['childPromotions'] != None and punchCard['parentPromotion']['complete'] == False and punchCard['parentPromotion']['pointProgressMax'] != 0:
                 url = punchCard['parentPromotion']['attributes']['destination']
                 if browser.current_url.startswith('https://rewards.'):
-                    path = url.replace('https://rewards.microsoft.com', '')
-                    new_url = 'https://rewards.microsoft.com/dashboard/'
+                    path = url.replace('https://rewards.bing.com', '')
+                    new_url = 'https://rewards.bing.com/dashboard/'
                     userCode = path[11:15]
                     dest = new_url + userCode + path.split(userCode)[1]
                 else:
@@ -836,7 +836,7 @@ def completePunchCards(browser: WebDriver):
         except:
             resetTabs(browser)
     time.sleep(2)
-    browser.get('https://rewards.microsoft.com/dashboard/')
+    browser.get('https://rewards.bing.com/dashboard/')
     time.sleep(2)
     LOGS[CURRENT_ACCOUNT]['Punch cards'] = True
     updateLogs()
